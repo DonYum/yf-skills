@@ -1,21 +1,20 @@
 ---
 name: summary-to-obsidian
-description: Use when user asks to research, investigate, analyze, compare, or summarize a topic and wants results saved as Obsidian notes. Triggers on Chinese keywords like 调研、研究、分析、整理、总结、对比 as well as English equivalents. Creates structured markdown notes in the user's Obsidian research vault.
+description: Use when user wants to summarize the current conversation or context and save it as a note into their Obsidian vault. Triggers on keywords like 总结、记录、保存、整理、写入 Obsidian, or "save to Obsidian".
 ---
 
-# 调研笔记
+# 总结并写入 Obsidian 笔记库
 
 ## 概述
 
-执行调研任务，并在用户的 Obsidian 调研库中生成标准化笔记。**必须保存输出——不要只在对话中回复。**
+把当前上下文做好总结，然后把总结插入 Obsidian 的调研库。
 
 **核心原则：** 先结论，后证据。每篇笔记以清晰的核心观点开头。
 
 ## 库配置
 
-- **库路径：** `/Users/yunfeng/Library/Mobile Documents/com~apple~CloudDocs/Obsidian/调研/`
+- **库路径：** `/Users/yunfeng/Obsidian/`，这个库下面有个`调研`文件夹，存放总结内容。
 - **结构：** 顶层文件夹 = 领域，笔记存放在领域文件夹内
-- **工具：** 所有库操作均使用 `obsidian:obsidian-cli` skill
 
 ## 文件命名规范
 
@@ -36,30 +35,14 @@ description: Use when user asks to research, investigate, analyze, compare, or s
 
 ## 工作流程
 
-### 第一步：动手前先澄清
 
-如果请求模糊或目的不明确，最多提两个聚焦的问题：
-- 应该放在哪个领域/文件夹？
-- 你最想解答的核心问题是什么？
+### 第一步：总结
 
-如果主题和范围已经清晰，直接开始。
+分析 Obsidian 库里 `调研` 下面的笔记，简单分析下关联关系，如果已有类似内容的笔记，直接在老笔记上更新。
+如果没有类似的就把相关的找到，方便后面做笔记关联。
 
-### 第二步：确定分类和文件名
 
-1. 从上表选择正确的 `[类型]`
-2. 选择或新建领域文件夹（例如 `区块链/`、`AI/`、`政策/`）
-3. 确认完整路径：`<库路径>/<领域>/<[类型] 主题>.md`
-
-### 第三步：多源调研
-
-按以下顺序调研，按需深入：
-
-1. **库内已有笔记** — 搜索相关笔记，避免重复并建立关联
-2. **网络搜索** — 最新信息、新闻、官方来源
-3. **论文/文档** — 技术性或学术性话题
-4. **公开数据** — 统计数据、报告、数据集
-
-### 第四步：撰写笔记
+### 第二步：撰写Obsidian笔记
 
 **必填 frontmatter：**
 ```yaml
@@ -68,15 +51,14 @@ title: "主题标题"
 date: YYYY-MM-DD
 tags: [tag1, tag2]
 source: [url1, url2]
-status: draft | complete
 ---
 ```
 
 **内容规范：**
 - **以结论开头** — 核心观点是什么？
 - **加粗关键判断** — `**这是关键结论**`
-- 使用 `[[wikilinks]]` 关联库内相关笔记
-- 使用 callout 标注重要注意事项：
+- 使用 `[[wikilinks]]` 关联库内相关笔记，如果没有关联笔记就不要加！
+- 必要时使用 callout 标注重要注意事项：
   ```
   > [!note] 注意
   > 重要的注意事项
@@ -86,9 +68,18 @@ status: draft | complete
   ```
 - 结构：核心结论 → 背景/定义 → 详细分析 → 来源
 
-### 第五步：保存并确认
+### 第三步：确定分类和文件名
 
-使用 `obsidian:obsidian-cli` 将文件写入库中。完成后汇报：
+1. 从上表选择正确的 `[类型]`
+2. 选择或新建领域文件夹（例如 `区块链/`、`AI/`、`政策/`）
+3. 确认完整路径：`<库路径>/<领域>/<[类型] 主题>.md`
+
+如果请求模糊或目的不明确，最多提两个聚焦的问题，比如：
+- 应该放在哪个领域/文件夹？
+
+### 第四步：保存并确认
+
+将文件写入Obsidian库中。完成后汇报：
 - 保存的完整文件路径
 - 核心结论（1-2 句话）
 - 已关联的相关笔记
@@ -102,4 +93,3 @@ status: draft | complete
 - [ ] 关键判断已加粗
 - [ ] 库内已有的相关概念已添加 wikilink
 - [ ] 来源已在 frontmatter 和/或正文中注明
-- [ ] status 已正确设置为 `draft` 或 `complete`

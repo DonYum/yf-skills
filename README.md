@@ -30,7 +30,7 @@ bash tools/install-skills.sh --dry-run
 
 ### summary-to-obsidian
 
-- **描述**: Use when user asks to research, investigate, analyze, compare, or summarize a topic and wants results saved as Obsidian notes. Triggers on Chinese keywords like 调研、研究、分析、整理、总结、对比 as well as English equivalents. Creates structured markdown notes in the user's Obsidian research vault.
+- **描述**: Use when user wants to summarize the current conversation or context and save it as a note into their Obsidian vault. Triggers on keywords like 总结、记录、保存、整理、写入 Obsidian, or "save to Obsidian".
 
 <!-- SKILLS:END -->
 
