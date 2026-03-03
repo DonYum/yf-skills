@@ -1,9 +1,8 @@
-# lx-skills 白名单配置
+# yf-skills 白名单配置
 #
 # 每行一个 skill id，支持 # 注释
 # 留空或注释的行会被忽略
 # 默认包含所有 skills，注释掉不需要安装的即可
 
 # demo-hello
-generate-legacy-project-docs
-generate-monorepo-docs
+summary-to-obsidian

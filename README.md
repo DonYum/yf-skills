@@ -1,6 +1,6 @@
-# lx-skills
+# yf-skills
 
-统一管理公司内 AI 编程工具（Codex、Claude Code 等）的 skills 仓库。
+个人 AI 编程工具（Codex、Claude Code 等）的 skills 仓库。
 
 ## 安装
 
@@ -28,13 +28,9 @@ bash tools/install-skills.sh --dry-run
 
 - **描述**: 演示 skill 的基本结构和用法
 
-### generate-legacy-project-docs
+### summary-to-obsidian
 
-- **描述**: Use when documenting an existing legacy project and generating AI-readable architecture, boundary, risk, and impact docs from code and existing markdown files.
-
-### generate-monorepo-docs
-
-- **描述**: Use when documenting a monorepo at system level, especially when cross-module dependencies, interface boundaries, change impact, and global rules must be consolidated.
+- **描述**: Use when user asks to research, investigate, analyze, compare, or summarize a topic and wants results saved as Obsidian notes. Triggers on Chinese keywords like 调研、研究、分析、整理、总结、对比 as well as English equivalents. Creates structured markdown notes in the user's Obsidian research vault.
 
 <!-- SKILLS:END -->
 
