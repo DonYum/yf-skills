@@ -105,13 +105,6 @@ install_skill() {
     if [[ "$DRY_RUN" == "true" ]]; then
       echo "  [DRY-RUN] 将覆盖: $skill_source -> $skill_dest"
       return
-    elif [[ "$FORCE" == "false" ]]; then
-      read -p "  $skill_dest 已存在，是否覆盖? (y/N) " -n 1 -r
-      echo
-      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "  ⊘ 跳过: $skill_id"
-        return
-      fi
     fi
   fi
 
