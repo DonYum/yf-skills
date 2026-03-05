@@ -11,9 +11,14 @@ description: Use when user wants to summarize the current conversation or contex
 
 **核心原则：** 先结论，后证据。每篇笔记以清晰的核心观点开头。
 
+## 前提
+
+**当前工作目录即为 Obsidian 知识库根目录。** 所有路径均相对于当前目录。
+
 ## 库配置
 
-- **库路径：** `/Users/yunfeng/Obsidian/`，这个库下面有个`调研`文件夹，存放总结内容。
+- **库路径：** `./`（当前目录）
+- **调研文件夹：** `./调研/`，存放所有总结内容
 - **结构：** 顶层文件夹 = 领域，笔记存放在领域文件夹内
 
 ## 文件命名规范
@@ -35,7 +40,7 @@ description: Use when user wants to summarize the current conversation or contex
 
 ## 访问限制
 
-**严格禁止：** 未经用户明确允许，不得读取或写入 `/Users/yunfeng/Obsidian/Myself/` 文件夹下的任何内容。
+**严格禁止：** 未经用户明确允许，不得读取或写入 `./Myself/` 文件夹下的任何内容。
 
 如果用户请求涉及 `Myself` 文件夹，必须：
 1. 明确告知用户该文件夹受保护
