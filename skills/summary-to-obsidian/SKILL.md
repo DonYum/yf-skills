@@ -33,6 +33,15 @@ description: Use when user wants to summarize the current conversation or contex
 
 示例：`[概念] ZK证明.md`、`[对比] GPT-4 vs Claude 3.md`、`[趋势] AI芯片2024.md`
 
+## 访问限制
+
+**严格禁止：** 未经用户明确允许，不得读取或写入 `/Users/yunfeng/Obsidian/Myself/` 文件夹下的任何内容。
+
+如果用户请求涉及 `Myself` 文件夹，必须：
+1. 明确告知用户该文件夹受保护
+2. 询问是否授权本次操作
+3. 仅在获得明确授权后才能继续
+
 ## 工作流程
 
 ### 第一步：总结
