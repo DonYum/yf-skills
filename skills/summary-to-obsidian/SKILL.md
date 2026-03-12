@@ -1,6 +1,6 @@
 ---
 name: summary-to-obsidian
-description: Use whenever the user wants to capture, record, save, or summarize anything into Obsidian — even if they don't say "Obsidian" explicitly. Triggers on: 总结、记录、保存、整理、写入 Obsidian、记笔记、做笔记、存到库里、存起来、记下来、归档、save to Obsidian, "take a note", "log this", "document this", "write this down", or any request to preserve knowledge from the current conversation. When in doubt, invoke this skill — it's better to ask than to let a useful insight go unsaved.
+description: "Use whenever the user wants to capture, record, save, or summarize anything into Obsidian — even if they don't say 'Obsidian' explicitly. Triggers on: 总结、记录、保存、整理、写入 Obsidian、记笔记、做笔记、存到库里、存起来、记下来、归档、save to Obsidian, take a note, log this, document this, write this down, or any request to preserve knowledge from the current conversation. When in doubt, invoke this skill — it's better to ask than to let a useful insight go unsaved."
 ---
 
 # 总结并写入 Obsidian 笔记库
