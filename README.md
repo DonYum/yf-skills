@@ -7,12 +7,13 @@
 使用安装脚本将白名单内的 skills 安装到本地：
 
 ```bash
-# 安装到 ~/.codex/skills 和 ~/.claude/skills
+# 安装到 ~/.codex/skills、~/.claude/skills 和 ~/.gemini/skills（默认）
 bash tools/install-skills.sh
 
 # 仅安装到指定目标
 bash tools/install-skills.sh --target codex
 bash tools/install-skills.sh --target claude
+bash tools/install-skills.sh --target gemini
 
 # 强制覆盖已存在的 skills
 bash tools/install-skills.sh -f

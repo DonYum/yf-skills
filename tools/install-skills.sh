@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Skills 安装脚本
-# 将白名单内的 skills 安装到 ~/.codex/skills 和 ~/.claude/skills
+# 将白名单内的 skills 安装到 ~/.codex/skills、~/.claude/skills 和 ~/.gemini/skills
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -12,7 +12,7 @@ WHITELIST_FILE="$REPO_ROOT/config/whitelist.txt"
 # 默认参数
 FORCE=false
 DRY_RUN=false
-TARGET="both"
+TARGET="all"
 
 # 解析命令行参数
 while [[ $# -gt 0 ]]; do
@@ -31,15 +31,15 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       echo "未知参数: $1"
-      echo "用法: $0 [-f|--force] [--dry-run] [--target codex|claude|both]"
+      echo "用法: $0 [-f|--force] [--dry-run] [--target codex|claude|gemini|all]"
       exit 1
       ;;
   esac
 done
 
 # 验证 target 参数
-if [[ "$TARGET" != "codex" && "$TARGET" != "claude" && "$TARGET" != "both" ]]; then
-  echo "错误: --target 必须是 codex、claude 或 both"
+if [[ "$TARGET" != "codex" && "$TARGET" != "claude" && "$TARGET" != "gemini" && "$TARGET" != "all" && "$TARGET" != "both" ]]; then
+  echo "错误: --target 必须是 codex、claude、gemini、all 或 both"
   exit 1
 fi
 
@@ -76,11 +76,14 @@ echo ""
 
 # 确定目标目录
 TARGETS=()
-if [[ "$TARGET" == "both" || "$TARGET" == "codex" ]]; then
+if [[ "$TARGET" == "all" || "$TARGET" == "both" || "$TARGET" == "codex" ]]; then
   TARGETS+=("$HOME/.codex/skills")
 fi
-if [[ "$TARGET" == "both" || "$TARGET" == "claude" ]]; then
+if [[ "$TARGET" == "all" || "$TARGET" == "both" || "$TARGET" == "claude" ]]; then
   TARGETS+=("$HOME/.claude/skills")
+fi
+if [[ "$TARGET" == "all" || "$TARGET" == "gemini" ]]; then
+  TARGETS+=("$HOME/.gemini/skills")
 fi
 
 # 安装函数

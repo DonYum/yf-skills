@@ -1,6 +1,6 @@
 ---
 name: summary-to-obsidian
-description: Use when user wants to summarize the current conversation or context and save it as a note into their Obsidian vault. Triggers on keywords like 总结、记录、保存、整理、写入 Obsidian, or "save to Obsidian".
+description: Use whenever the user wants to capture, record, save, or summarize anything into Obsidian — even if they don't say "Obsidian" explicitly. Triggers on: 总结、记录、保存、整理、写入 Obsidian、记笔记、做笔记、存到库里、存起来、记下来、归档、save to Obsidian, "take a note", "log this", "document this", "write this down", or any request to preserve knowledge from the current conversation. When in doubt, invoke this skill — it's better to ask than to let a useful insight go unsaved.
 ---
 
 # 总结并写入 Obsidian 笔记库
@@ -11,13 +11,25 @@ description: Use when user wants to summarize the current conversation or contex
 
 **核心原则：** 先结论，后证据。每篇笔记以清晰的核心观点开头。
 
-## 前提
+## 前提：验证库路径
 
-**当前工作目录即为 Obsidian 知识库根目录。** 所有路径均相对于当前目录。
+**在做任何事之前，先确认 Obsidian 库路径是否正确。**
+
+检查当前目录下是否存在 `./调研/` 文件夹：
+
+- **存在** → 继续，当前目录即为库根目录，所有路径相对于此
+- **不存在** → 停止，告知用户：
+
+  > 当前目录（`<pwd>`）下未找到 `调研/` 文件夹，可能不是 Obsidian 库根目录。
+  > 请确认：
+  > 1. 是否需要在当前目录初始化库结构（创建 `调研/` 文件夹）？
+  > 2. 还是应该切换到其他目录？
+
+  等待用户确认后再继续。
 
 ## 库配置
 
-- **库路径：** `./`（当前目录）
+- **库路径：** `./`（当前目录，已通过前提验证）
 - **调研文件夹：** `./调研/`，存放所有总结内容
 - **结构：** 顶层文件夹 = 领域，笔记存放在领域文件夹内
 
