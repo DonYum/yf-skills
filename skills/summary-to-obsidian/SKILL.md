@@ -1,15 +1,15 @@
 ---
 name: summary-to-obsidian
-description: "Use whenever the user wants to capture, record, save, or summarize anything into Obsidian — even if they don't say 'Obsidian' explicitly. Triggers on: 总结、记录、保存、整理、写入 Obsidian、记笔记、做笔记、存到库里、存起来、记下来、归档、save to Obsidian, take a note, log this, document this, write this down, or any request to preserve knowledge from the current conversation. When in doubt, invoke this skill — it's better to ask than to let a useful insight go unsaved."
+description: "Use when the user explicitly wants to save, summarize, capture, or organize information into an Obsidian vault or note, including requests such as 写入 Obsidian, 记笔记, 保存到库里, save to Obsidian, or write this down in notes."
 ---
 
 # 总结并写入 Obsidian 笔记库
 
 ## 概述
 
-把当前上下文做好总结，然后把总结插入 Obsidian 的调研库。
+把当前上下文整理成结构化 Obsidian 笔记，并保存到用户的 Obsidian 库。
 
-**核心原则：** 先结论，后证据。每篇笔记以清晰的核心观点开头。
+**核心原则：** 先结论，后证据。每篇笔记以清晰的核心观点开头，并且只在用户明确要保存到 Obsidian 时触发。
 
 ## 前提：验证库路径
 
@@ -17,8 +17,8 @@ description: "Use whenever the user wants to capture, record, save, or summarize
 
 检查当前目录下是否存在 `./调研/` 文件夹：
 
-- **存在** → 继续，当前目录即为库根目录，所有路径相对于此
-- **不存在** → 停止，告知用户：
+- **存在** -> 继续，当前目录即为库根目录，所有路径相对于此
+- **不存在** -> 停止，告知用户：
 
   > 当前目录（`<pwd>`）下未找到 `调研/` 文件夹，可能不是 Obsidian 库根目录。
   > 请确认：
@@ -61,40 +61,45 @@ description: "Use whenever the user wants to capture, record, save, or summarize
 
 ## 工作流程
 
-### 第一步：总结
+### 第一步：确认目标与现有内容
 
-分析 Obsidian 库里 `调研` 下面的笔记，简单分析下关联关系，如果已有类似内容的笔记，直接在老笔记上更新（但存放的位置、命名规则和内容排版要和下面对齐）。
-如果没有类似的就把相关的找到，方便后面做笔记关联。
+先确认这次是：
+- 新建笔记
+- 更新已有笔记
+- 在已有笔记基础上追加一个新章节
+
+然后只读取完成任务所必需的目录和笔记：
+- 优先检查 `调研/` 下是否已有同主题或强相关笔记
+- 如果已有类似内容，优先更新原笔记，而不是重复新建
+- 如果没有类似内容，再决定新建笔记，并记录可添加的 `[[wikilinks]]`
 
 ### 第二步：规划可视化图表
 
 分析内容，判断哪些部分用图表表达比纯文字更清晰，然后选择合适的工具。
 
 **何时添加图表：**
-- 内容包含流程/步骤/工作流 → 强烈建议
-- 内容包含多个概念间的关系/依赖 → 强烈建议
-- 内容包含对比/比较多个方案 → 建议
-- 内容有层级结构/分类体系 → 建议
-- 纯文字陈述，无明显结构 → 可跳过
+- 内容包含流程、步骤或工作流 -> 强烈建议
+- 内容包含多个概念间的关系或依赖 -> 强烈建议
+- 内容包含对比多个方案 -> 建议
+- 内容有层级结构或分类体系 -> 建议
+- 纯文字陈述，无明显结构 -> 可跳过
 
 **选择图表工具：**
 
 | 场景 | 推荐工具 | Skill |
 |------|----------|-------|
-| 流程图、时序图、状态机、简单关系图 | **Mermaid**（内联，无需附件） | `obsidian-visual-skills:mermaid-visualizer` |
-| 复杂关系图、手绘风思维导图、多层级结构 | **Excalidraw**（存为附件） | `obsidian-visual-skills:excalidraw-diagram` |
-| 空间化思维导图、多主题聚合、自由布局 | **Obsidian Canvas**（存为附件） | `obsidian-visual-skills:obsidian-canvas-creator` |
+| 流程图、时序图、状态机、简单关系图 | **Mermaid**（内联，无需附件） | 无需额外 skill，直接写入代码块 |
+| 空间化思维导图、多主题聚合、自由布局 | **Obsidian Canvas**（存为附件） | `json-canvas` |
 
 **工具使用规则：**
-- **Mermaid 优先**：能用 Mermaid 表达的，不用 Excalidraw，因为 Mermaid 直接内联在笔记中，无需额外文件
-- **Excalidraw**：适合需要手绘风或更复杂视觉效果的场景，文件保存到 `_resources/` 后在笔记中嵌入 `![[文件名.md]]`
+- **Mermaid 优先**：能用 Mermaid 表达的，不额外创建附件，因为 Mermaid 直接内联在笔记中
 - **Canvas**：适合整体思维导图或跨笔记组织，文件保存到当前领域文件夹，在笔记中链接 `[[文件名.canvas]]`
 - **每篇笔记最多 2 张图**，避免过度可视化
 
 **调用方式：**
-使用对应的 Skill 工具来生成图表内容，然后将 Mermaid 代码内联到笔记，或将 Excalidraw/Canvas 文件保存至 `_resources/` 并在笔记中引用。
+优先使用 `obsidian-markdown` 处理笔记本体；如果需要 Canvas，再使用 `json-canvas` 创建 `.canvas` 文件。将 Mermaid 代码直接内联到笔记；如有 Canvas 文件，则保存在对应领域目录并以 `[[文件名.canvas]]` 方式引用。
 
-### 第三步：撰写Obsidian笔记
+### 第三步：撰写 Obsidian 笔记
 
 **必填 frontmatter：**
 ```yaml
@@ -107,12 +112,11 @@ source: [url1, url2]
 ```
 
 **内容规范：**
-- **以结论开头** — 核心观点是什么？
-- **加粗关键判断** — `**这是关键结论**`
-- 使用 `[[wikilinks]]` 关联库内相关笔记，如果没有关联笔记就不要加！
+- **以结论开头** - 核心观点是什么？
+- **加粗关键判断** - `**这是关键结论**`
+- 使用 `[[wikilinks]]` 关联库内相关笔记，如果没有关联笔记就不要加
 - 在合适位置嵌入第二步生成的图表：
-  - Mermaid：直接内联 ` ```mermaid ``` ` 代码块
-  - Excalidraw：`![[_resources/图表名.md]]`
+  - Mermaid：直接内联 ```` ```mermaid ``` ````
   - Canvas：`[[图表名.canvas]]`
 - 必要时使用 callout 标注重要注意事项：
   ```
@@ -122,26 +126,27 @@ source: [url1, url2]
   > [!warning] 风险
   > 关键风险或局限性
   ```
-- 结构：核心结论 → 背景/定义 → 详细分析（含图表）→ 来源
+- 结构：核心结论 -> 背景/定义 -> 详细分析（含图表）-> 来源
 
 注意：
-- 如果笔记里有附件或图片，我的 Obsidian 设置规则是存放在当前文件夹的`_resources`目录下。
-- 生成的流程图、架构图的排版最好是自上而下（`TB`）。
-- mermaid 语言里换行使用`<br/>`，`\n` 的兼容性不好。
+- 如果笔记里有附件或图片，存放在当前文件夹的 `_resources` 目录下
+- 生成的流程图、架构图的排版最好是自上而下（`TB`）
+- Mermaid 里换行使用 `<br/>`，`\n` 的兼容性不好
 
 ### 第四步：确定分类和文件名
 
 1. 从上表选择正确的 `[类型]`
 2. 选择或新建领域文件夹（例如 `区块链/`、`AI/`、`政策/`）
 3. 确认完整路径：`<库路径>/<领域>/<[类型] 主题>.md`
-4. 如有 Excalidraw/Canvas 附件，路径为：`<库路径>/<领域>/_resources/<附件名>`
+4. 如有图片类附件，路径为：`<库路径>/<领域>/_resources/<附件名>`
+5. 如有 Canvas 文件，路径为：`<库路径>/<领域>/<文件名>.canvas`
 
 如果请求模糊或目的不明确，最多提两个聚焦的问题，比如：
-- 应该放在哪个领域/文件夹？
+- 应该放在哪个领域或文件夹？
 
 ### 第五步：保存并确认
 
-将文件写入Obsidian库中。完成后汇报：
+将文件写入 Obsidian 库中。完成后汇报：
 - 保存的完整文件路径
 - 核心结论（1-2 句话）
 - 已关联的相关笔记
@@ -155,5 +160,6 @@ source: [url1, url2]
 - [ ] 笔记以结论开头，而非背景介绍
 - [ ] 关键判断已加粗
 - [ ] 库内已有的相关概念已添加 wikilink
-- [ ] 来源已在 frontmatter 和/或正文中注明
-- [ ] 图表（如有）已正确嵌入，附件已保存至 `_resources/`
+- [ ] 来源已在 frontmatter 和或正文中注明
+- [ ] Mermaid 或 Canvas（如有）已正确嵌入或链接
+- [ ] 图片类附件（如有）已保存至 `_resources/`
