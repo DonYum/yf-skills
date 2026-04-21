@@ -3,6 +3,7 @@ set -euo pipefail
 
 # Skills 安装脚本
 # 将白名单内的 skills 安装到 ~/.codex/skills、~/.claude/skills 和 ~/.gemini/skills
+# 默认使用符号链接，便于在仓库中更新后立即生效
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -13,6 +14,7 @@ WHITELIST_FILE="$REPO_ROOT/config/whitelist.txt"
 FORCE=false
 DRY_RUN=false
 TARGET="all"
+MODE="link"
 
 # 解析命令行参数
 while [[ $# -gt 0 ]]; do
@@ -25,13 +27,17 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
+    --mode)
+      MODE="$2"
+      shift 2
+      ;;
     --target)
       TARGET="$2"
       shift 2
       ;;
     *)
       echo "未知参数: $1"
-      echo "用法: $0 [-f|--force] [--dry-run] [--target codex|claude|gemini|all]"
+      echo "用法: $0 [-f|--force] [--dry-run] [--mode link|copy] [--target codex|claude|gemini|all]"
       exit 1
       ;;
   esac
@@ -40,6 +46,11 @@ done
 # 验证 target 参数
 if [[ "$TARGET" != "codex" && "$TARGET" != "claude" && "$TARGET" != "gemini" && "$TARGET" != "all" && "$TARGET" != "both" ]]; then
   echo "错误: --target 必须是 codex、claude、gemini、all 或 both"
+  exit 1
+fi
+
+if [[ "$MODE" != "link" && "$MODE" != "copy" ]]; then
+  echo "错误: --mode 必须是 link 或 copy"
   exit 1
 fi
 
@@ -72,6 +83,7 @@ if [[ -z "$WHITELIST" ]]; then
 fi
 
 echo "白名单 skills: $WHITELIST"
+echo "安装模式: $MODE"
 echo ""
 
 # 确定目标目录
@@ -87,7 +99,12 @@ if [[ "$TARGET" == "all" || "$TARGET" == "gemini" ]]; then
 fi
 
 # 安装函数
-install_skill() {
+path_exists() {
+  local path="$1"
+  [[ -e "$path" || -L "$path" ]]
+}
+
+install_link() {
   local skill_id="$1"
   local target_dir="$2"
   local skill_source="$SKILLS_DIR/$skill_id"
@@ -103,24 +120,87 @@ install_skill() {
     return
   fi
 
-  # 检查目标是否已存在
-  if [[ -d "$skill_dest" ]]; then
-    if [[ "$DRY_RUN" == "true" ]]; then
-      echo "  [DRY-RUN] 将覆盖: $skill_source -> $skill_dest"
+  if path_exists "$skill_dest"; then
+    if [[ -L "$skill_dest" && "$(readlink "$skill_dest")" == "$skill_source" ]]; then
+      echo "  ↷ 已存在链接: $skill_id -> $skill_dest"
+      return
+    fi
+
+    if [[ "$FORCE" != "true" ]]; then
+      echo "  ⚠ 跳过: $skill_id (目标已存在，使用 -f 覆盖)"
       return
     fi
   fi
 
   if [[ "$DRY_RUN" == "true" ]]; then
-    echo "  [DRY-RUN] 将安装: $skill_source -> $skill_dest"
+    if path_exists "$skill_dest"; then
+      echo "  [DRY-RUN] 将替换为链接: $skill_source -> $skill_dest"
+    else
+      echo "  [DRY-RUN] 将创建链接: $skill_source -> $skill_dest"
+    fi
+    return
+  fi
+
+  if path_exists "$skill_dest"; then
+    rm -rf "$skill_dest"
+  fi
+
+  ln -s "$skill_source" "$skill_dest"
+  echo "  ✓ 已链接: $skill_id -> $skill_dest"
+}
+
+install_copy() {
+  local skill_id="$1"
+  local target_dir="$2"
+  local skill_source="$SKILLS_DIR/$skill_id"
+  local skill_dest="$target_dir/$skill_id"
+
+  if [[ ! -d "$skill_source" ]]; then
+    echo "  ⚠ 跳过: $skill_id (源目录不存在)"
+    return
+  fi
+
+  if [[ ! -f "$skill_source/SKILL.md" ]]; then
+    echo "  ⚠ 跳过: $skill_id (SKILL.md 不存在)"
+    return
+  fi
+
+  if path_exists "$skill_dest" && [[ ! -d "$skill_dest" || -L "$skill_dest" ]]; then
+    if [[ "$FORCE" != "true" ]]; then
+      echo "  ⚠ 跳过: $skill_id (目标已存在且不是目录，使用 -f 覆盖)"
+      return
+    fi
+  fi
+
+  if [[ "$DRY_RUN" == "true" ]]; then
+    if path_exists "$skill_dest"; then
+      echo "  [DRY-RUN] 将更新副本: $skill_source -> $skill_dest"
+    else
+      echo "  [DRY-RUN] 将复制安装: $skill_source -> $skill_dest"
+    fi
+    return
+  fi
+
+  if path_exists "$skill_dest" && [[ ! -d "$skill_dest" || -L "$skill_dest" ]]; then
+    rm -rf "$skill_dest"
+  fi
+
+  mkdir -p "$skill_dest"
+  cp "$skill_source/SKILL.md" "$skill_dest/SKILL.md"
+  echo "  ✓ 已复制: $skill_id -> $skill_dest"
+}
+
+install_skill() {
+  local skill_id="$1"
+  local target_dir="$2"
+
+  if [[ "$MODE" == "link" ]]; then
+    install_link "$skill_id" "$target_dir"
   else
-    mkdir -p "$skill_dest"
-    cp "$skill_source/SKILL.md" "$skill_dest/SKILL.md"
-    echo "  ✓ 已安装: $skill_id -> $skill_dest"
+    install_copy "$skill_id" "$target_dir"
   fi
 }
 
-# 遍历目标和白名单
 for target_dir in "${TARGETS[@]}"; do
   echo "目标: $target_dir"
 

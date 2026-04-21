@@ -4,10 +4,10 @@
 
 ## 安装
 
-使用安装脚本将白名单内的 skills 安装到本地：
+使用安装脚本将白名单内的 skills 安装到本地。默认使用符号链接，修改仓库中的 skill 后会立即反映到本地安装目录：
 
 ```bash
-# 安装到 ~/.codex/skills、~/.claude/skills 和 ~/.gemini/skills（默认）
+# 安装到 ~/.codex/skills、~/.claude/skills 和 ~/.gemini/skills（默认 link 模式）
 bash tools/install-skills.sh
 
 # 仅安装到指定目标
@@ -15,11 +15,20 @@ bash tools/install-skills.sh --target codex
 bash tools/install-skills.sh --target claude
 bash tools/install-skills.sh --target gemini
 
+# 保留旧的复制安装方式
+bash tools/install-skills.sh --mode copy
+
 # 强制覆盖已存在的 skills
 bash tools/install-skills.sh -f
 
 # 预览安装计划（不实际写入）
 bash tools/install-skills.sh --dry-run
+```
+
+如果之前已经用 copy 方式安装过，首次切换到 link 模式时请加 `-f`，这样会把已有目录替换为符号链接：
+
+```bash
+bash tools/install-skills.sh -f
 ```
 
 ## Skills 列表
@@ -43,6 +52,6 @@ bash tools/install-skills.sh --dry-run
 2. 添加 `SKILL.md` 文件（包含 YAML front matter 元数据）
 3. 将 skill id 添加到 `config/whitelist.txt`（或注释掉不需要的）
 4. 运行 `bash tools/generate-readme.sh` 更新 README
+5. 运行 `bash tests/install-skills.test.sh` 验证安装脚本行为
 
 详细规范见 [docs/skill-format.md](docs/skill-format.md)
-
