@@ -1,0 +1,23 @@
+{
+  "skill_name": "summary-to-obsidian",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我把下面关于 RAG（检索增强生成）的内容整理成笔记保存到 Obsidian：\n\nRAG 的核心流程是：用户提问 → 向量检索相关文档 → 将检索结果作为上下文拼接到 prompt → LLM 生成回答。\n\n主要优势：减少幻觉、知识可更新、可溯源。\n主要挑战：检索质量直接影响生成质量、chunk 策略很关键、embedding 模型选择影响召回率。\n\n目前主流方案：LangChain + ChromaDB、LlamaIndex + Pinecone、自建 pipeline。\n\n来源：https://arxiv.org/abs/2312.10997",
+      "expected_output": "应该生成一篇结构化笔记，包含 Mermaid 流程图展示 RAG 流程，使用 obsidian-markdown 规范的 frontmatter、callouts、wikilinks",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我们公司的微服务架构需要记录一下，保存到 Obsidian 笔记里，要有架构全景图：\n\n系统由 5 个核心服务组成：\n- API Gateway（Kong）：统一入口，负责认证和限流\n- User Service：用户管理，连接 PostgreSQL\n- Order Service：订单处理，连接 MySQL，通过 Kafka 发事件\n- Payment Service：支付处理，对接支付宝/微信支付\n- Notification Service：消费 Kafka 事件，发送邮件/短信\n\n服务间通过 gRPC 通信，异步事件走 Kafka。部署在 K8s 上，用 Istio 做服务网格。",
+      "expected_output": "应该生成笔记 + Excalidraw 架构图（因为是复杂多层架构，Mermaid 表达力不够），图中展示服务间关系、数据流、中间件",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "这是我在 AI 领域的第四篇笔记了（之前已经有 [概念] Transformer.md、[概念] Attention机制.md、[趋势] 大模型2024.md），帮我把下面内容也保存一下，顺便建个索引视图管理这些笔记：\n\nPrompt Engineering 的核心技巧：\n1. Few-shot：给几个示例\n2. Chain-of-Thought：让模型分步推理\n3. Role-playing：设定角色\n4. 结构化输出：指定 JSON/XML 格式\n\n来源：https://www.promptingguide.ai/",
+      "expected_output": "应该生成笔记 + 一个 .base 文件作为 AI 领域笔记的索引视图，按类型、日期等维度组织",
+      "files": []
+    }
+  ]
+}
