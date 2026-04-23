@@ -6,3 +6,4 @@
 
 # demo-hello
 summary-to-obsidian
+karpathy-guidelines

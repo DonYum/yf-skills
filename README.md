@@ -38,9 +38,13 @@ bash tools/install-skills.sh -f
 
 - **描述**: 演示 skill 的基本结构和用法
 
+### karpathy-guidelines
+
+- **描述**: Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
+
 ### summary-to-obsidian
 
-- **描述**: Use when user wants to summarize the current conversation or context and save it as a note into their Obsidian vault. Triggers on keywords like 总结、记录、保存、整理、写入 Obsidian, or "save to Obsidian".
+- **描述**: "Use when the user explicitly wants to save, summarize, capture, or organize information into an Obsidian vault or note, including requests such as 写入 Obsidian, 记笔记, 保存到库里, save to Obsidian, write this down in notes, 整理成笔记, 做个总结存起来, 帮我记录一下. This skill orchestrates multiple Obsidian skills (obsidian-markdown, mermaid-visualizer, excalidraw-diagram, obsidian-canvas-creator, obsidian-bases) to produce rich, well-structured notes with diagrams, canvas maps, and database views as needed. Even if the user just says '保存' or 'save this', if the context involves Obsidian or notes, use this skill."
 
 <!-- SKILLS:END -->
 
